@@ -60,7 +60,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-speeddata-dev-211101-deployment",
-          "S3Key": "amplify-builds/S3Triggercd49230a-7270694d4477694c5844-build.zip"
+          "S3Key": "amplify-builds/S3Triggercd49230a-4832345042764c654846-build.zip"
         }
       }
     },
