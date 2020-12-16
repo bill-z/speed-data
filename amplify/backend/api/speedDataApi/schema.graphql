@@ -1,5 +1,16 @@
-type Todo @model {
+type Vehicle @model {
+  """ use S3 image filename as unique id """
   id: ID!
-  name: String!
-  description: String
+
+  """ ISO date string """
+  time: AWSDateTime!
+
+  """ %2.1f miles per hour """
+  speed: Float!
+
+  """ 'north' | 'south' """
+  direction: String
+
+  """ '', 'bus', 'police', 'fire', 'delivery', ... """
+  vehicleType: String
 }
