@@ -4,6 +4,14 @@
   "Parameters": {
     "env": {
       "Type": "String"
+    },
+    "functionS3Triggercd49230aName": {
+      "Type": "String",
+      "Default": "functionS3Triggercd49230aName"
+    },
+    "apispeedDataApiGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apispeedDataApiGraphQLAPIIdOutput"
     }
   },
   "Conditions": {
@@ -47,6 +55,41 @@
           "Variables": {
             "ENV": {
               "Ref": "env"
+            },
+            "REGION": {
+              "Ref": "AWS::Region"
+            },
+            "FUNCTION_S3TRIGGERCD49230A_NAME": {
+              "Ref": "functionS3Triggercd49230aName"
+            },
+            "API_SPEEDDATAAPI_VEHICLETABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apispeedDataApiGraphQLAPIIdOutput}:GetAtt:VehicleTable:Name"
+              }
+            },
+            "API_SPEEDDATAAPI_VEHICLETABLE_ARN": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:dynamodb:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":table/",
+                  {
+                    "Fn::ImportValue": {
+                      "Fn::Sub": "${apispeedDataApiGraphQLAPIIdOutput}:GetAtt:VehicleTable:Name"
+                    }
+                  }
+                ]
+              ]
+            },
+            "API_SPEEDDATAAPI_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apispeedDataApiGraphQLAPIIdOutput"
             }
           }
         },
@@ -60,7 +103,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-speeddata-dev-211101-deployment",
-          "S3Key": "amplify-builds/S3Triggercd49230a-633372636c69396c4467-build.zip"
+          "S3Key": "amplify-builds/S3Triggercd49230a-6e764d476a6278714145-build.zip"
         }
       }
     },
@@ -141,6 +184,80 @@
                   }
                 ]
               }
+            }
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Put*",
+                "dynamodb:Create*",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:Update*",
+                "dynamodb:RestoreTable*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apispeedDataApiGraphQLAPIIdOutput}:GetAtt:VehicleTable:Name"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apispeedDataApiGraphQLAPIIdOutput}:GetAtt:VehicleTable:Name"
+                        }
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         }

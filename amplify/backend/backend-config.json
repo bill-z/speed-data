@@ -29,7 +29,16 @@
     "S3Triggercd49230a": {
       "service": "Lambda",
       "providerPlugin": "awscloudformation",
-      "build": true
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "speedDataApi",
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ]
+        }
+      ]
     }
   },
   "storage": {

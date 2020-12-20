@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "storage": {
+      "Vehicle:@model(appsync)": [
+        "create",
+        "update"
+      ]
+    }
+  }
+}
