@@ -16,7 +16,7 @@ My first experiment was to measure the traffic on the street where I live. That 
 1) The street-traffic app running on the Raspberry Pi saves vehicle photos with date, time, speed and direction embedded in the image filename.
 2) The photos are uploaded to an AWS S3 bucket.
 3) When a file is added to the S3, a JS/Node Lambda function is executed.
-4) The trigger function extracts the data from the image file name and create a vehicle speed record in a DynamoDB table.
+4) The trigger function extracts the data from the image file name and creates a vehicle speed record in a DynamoDB table.
 5) The React application fetches and displays speed data from the DynamoDB table using a GraphQL query.
 
 ![project overview diagram](/doc/speed-data-overview.png?raw=true "Project Overview")
