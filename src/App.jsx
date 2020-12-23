@@ -1,13 +1,16 @@
-/* src/App.jsx */
 import React from 'react'
-import Amplify from 'aws-amplify'
-import Traffic from './components/Traffic'
+import { Route, Switch, Redirect } from "wouter";
+import { Home, Stats, Admin } from './pages'
 
-import awsExports from "./aws-exports";
-Amplify.configure(awsExports);
-
-function App () {
-  return (<Traffic />)
-}
+const App = () => (
+    <Switch>
+      <Route path="/stats"><Stats /></Route>
+      <Route path="/admin"><Admin /></Route>
+      <Route path="/"><Home /></Route>
+      <Route>
+        <Redirect to="/"></Redirect>
+      </Route>
+    </Switch>
+  )
 
 export default App

@@ -1,12 +1,10 @@
-/* src/App.jsx */
 import React, { useEffect, useState } from 'react'
 import { API, graphqlOperation } from 'aws-amplify'
 import { listVehicles } from '../graphql/queries'
-import { PageHeader, Table } from 'antd';
+import { Table } from 'antd';
 
 function formatTime(isoTimeString) {
   return (new Date(isoTimeString).toLocaleString('en-US', {
-    timezone: 'UTC',
     weekday: 'short',
     month: 'short',
     day: 'numeric',
@@ -32,7 +30,7 @@ const columns = [
   {title: 'Direction', dataIndex: 'direction'},
 ]
 
-function Traffic () {
+function TrafficTable () {
   const [vehicles, setVehicles] = useState([])
   const [loading, setLoading] = useState([])
 
@@ -52,11 +50,6 @@ function Traffic () {
   }
 
   return (
-    <div style={styles.container}>
-      <PageHeader title="Benton Street Traffic">
-        Welcome to Benton Street - a quiet, tree-lined, residential, neighborhood street.
-        <p>(with a 25 mph speed limit)</p>
-      </PageHeader> 
       <Table
         columns={columns}
         dataSource={vehicles}
@@ -65,12 +58,7 @@ function Traffic () {
         loading={loading}
         pagination={{defaultPageSize: 5, pageSizeOptions: [5, 10, 25, 50, 100]}}
       />
-    </div>
   )
 }
 
-const styles = {
-  container: { width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 40 },
-}
-
-export default Traffic
+export default TrafficTable
