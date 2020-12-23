@@ -9,6 +9,7 @@ export const onCreateVehicle = /* GraphQL */ `
       speed
       direction
       vehicleType
+      photoUrl
       createdAt
       updatedAt
     }
@@ -22,6 +23,7 @@ export const onUpdateVehicle = /* GraphQL */ `
       speed
       direction
       vehicleType
+      photoUrl
       createdAt
       updatedAt
     }
@@ -35,6 +37,7 @@ export const onDeleteVehicle = /* GraphQL */ `
       speed
       direction
       vehicleType
+      photoUrl
       createdAt
       updatedAt
     }

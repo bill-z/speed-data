@@ -17,14 +17,7 @@
       }
     }
   },
-  "auth": {
-    "speeddataa9f0b943": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [],
-      "customAuth": false
-    }
-  },
+  "auth": {},
   "function": {
     "S3Triggercd49230a": {
       "service": "Lambda",

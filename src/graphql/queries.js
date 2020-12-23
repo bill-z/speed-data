@@ -9,6 +9,7 @@ export const getVehicle = /* GraphQL */ `
       speed
       direction
       vehicleType
+      photoUrl
       createdAt
       updatedAt
     }
@@ -27,6 +28,7 @@ export const listVehicles = /* GraphQL */ `
         speed
         direction
         vehicleType
+        photoUrl
         createdAt
         updatedAt
       }

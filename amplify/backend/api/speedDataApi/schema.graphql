@@ -3,7 +3,7 @@ type Vehicle @model {
   id: ID!
 
   """ ISO date string """
-  time: AWSDateTime!
+  time: String!
 
   """ %2.1f miles per hour """
   speed: Float!
@@ -13,4 +13,14 @@ type Vehicle @model {
 
   """ '', 'bus', 'police', 'fire', 'delivery', ... """
   vehicleType: String
+
+  """ S3 url of photo """
+  photoUrl: String
+
+  """ 
+  The following are added automatically by Amplify.
+  (re)define them as nullable (not required)
+  """
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
 }

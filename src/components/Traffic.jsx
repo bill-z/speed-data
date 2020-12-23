@@ -2,9 +2,39 @@
 import React, { useEffect, useState } from 'react'
 import { API, graphqlOperation } from 'aws-amplify'
 import { listVehicles } from '../graphql/queries'
+import { PageHeader, Table } from 'antd';
+
+function formatTime(isoTimeString) {
+  return (new Date(isoTimeString).toLocaleString('en-US', {
+    timezone: 'UTC',
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'    
+  }))
+}
+
+// Table column definitions
+const columns = [
+  {title: 'Time', dataIndex: 'time',
+    sorter: (a, b) => new Date(a.time) - new Date(b.time),
+    render: time => <span>{formatTime(time)}</span>
+  },
+  {title: 'Vehicle', dataIndex: 'photoUrl', 
+    render: photoUrl => <img alt={photoUrl} src={photoUrl} />
+  },
+  {title: 'Speed', dataIndex: 'speed',
+    sorter: (a, b) => a.speed - b.speed,
+    sortDirections: ['descend', 'ascend'],
+    render: speed => <span>{speed} mph</span>
+  },
+  {title: 'Direction', dataIndex: 'direction'},
+]
 
 function Traffic () {
   const [vehicles, setVehicles] = useState([])
+  const [loading, setLoading] = useState([])
 
   useEffect(() => {
     fetchVehicles()
@@ -12,40 +42,35 @@ function Traffic () {
 
   async function fetchVehicles() {
     try {
-      const vehicleData = await API.graphql(graphqlOperation(listVehicles))
+      setLoading(true)
+      const vehicleData = await API.graphql(graphqlOperation(listVehicles, {limit: 10000}))
+      setLoading(false)
       const vehicles = vehicleData.data.listVehicles.items
-      setVehicles(vehicles)
+      setVehicles(vehicles);
+      
     } catch (err) { console.log('error fetching vehicles', err) }
   }
 
   return (
     <div style={styles.container}>
-      <h2>Benton Street Traffic</h2>
-      {vehicles.map((vehicle, index) => (
-        <div key={vehicle.id} style={styles.vehicle}>
-          <img className="vehicle-photo" src={vehicle.photoUrl} alt="Vehicle driving by"/>
-          <span style={styles.vehicleTime}>{
-            new Date(vehicle.time).toLocaleString('en-US', {
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: 'numeric'
-            })
-          }: </span>
-          <span style={styles.vehicleSpeed}>{vehicle.speed} mph </span>
-          <span style={styles.vehicleDirection}>heading {vehicle.direction}</span>
-        </div>
-      ))}
+      <PageHeader title="Benton Street Traffic">
+        Welcome to Benton Street - a quiet, tree-lined, residential, neighborhood street.
+        <p>(with a 25 mph speed limit)</p>
+      </PageHeader> 
+      <Table
+        columns={columns}
+        dataSource={vehicles}
+        rowKey="id"
+        sticky="true"
+        loading={loading}
+        pagination={{defaultPageSize: 5, pageSizeOptions: [5, 10, 25, 50, 100]}}
+      />
     </div>
   )
 }
 
 const styles = {
-  vehicle: {  marginBottom: 15 },
-  vehicleTime: { marginBottom: 0 },
-  vehicleSpeed: { marginBottom: 0 },
-  vehicleDirection: { marginBottom: 0 },
+  container: { width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 40 },
 }
 
 export default Traffic

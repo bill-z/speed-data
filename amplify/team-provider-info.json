@@ -10,11 +10,6 @@
       "StackName": "amplify-speeddata-dev-211101",
       "StackId": "arn:aws:cloudformation:us-east-1:106593687772:stack/amplify-speeddata-dev-211101/2b5af030-3e83-11eb-82ae-0e46d57ace87",
       "AmplifyAppId": "doctq27fl6hmk"
-    },
-    "categories": {
-      "auth": {
-        "speeddataa9f0b943": {}
-      }
     }
   }
 }

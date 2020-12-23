@@ -11,7 +11,7 @@ Amplify Params - DO NOT EDIT */
 // Load the AWS SDK for Node.js
 const AWS = require('aws-sdk');
 
-const extractVehicleSpeedDataFromImageFilename = (imageFilename) => {
+const getVehicleSpeedData = (imageFilename, bucket, key) => {
     const [timeString, speed, directionCode, vehicleTypeCode] = imageFilename.split('_');
     const [year, month, day, hour, minute] = timeString.split('-');
     const date = new Date(year, month-1, day, hour, minute);
@@ -29,22 +29,21 @@ const extractVehicleSpeedDataFromImageFilename = (imageFilename) => {
       'D': 'delivery'
     }[vehicleTypeCode];
 
+    const photoUrl = `https://${bucket}.s3.amazonaws.com/${key}`;
+
     return {
       id: imageFilename,
       date,
       speed,
       direction,
-      vehicleType
+      vehicleType,
+      photoUrl
     };
 }
 
 const storeVehicleSpeedData = async (vehicleSpeedData) => {
-  console.log('createVehicleSpeedData:', JSON.stringify(vehicleSpeedData));
-
-  // Create the DynamoDB service object
   const ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-  
-  const {id, date, speed, direction, vehicleType} = vehicleSpeedData;
+  const {id, date, speed, direction, vehicleType, photoUrl} = vehicleSpeedData;
 
   var params = {
     TableName: 'Vehicle-pgvfaidzgzfdhkhg5mjgdvaheu-dev',
@@ -53,15 +52,13 @@ const storeVehicleSpeedData = async (vehicleSpeedData) => {
       'time' : {S: date.toISOString()},
       'speed': {N: speed},
       'direction': {S: direction},
-      'vehicle': {S: vehicleType}
+      'vehicle': {S: vehicleType},
+      'photoUrl': {S: photoUrl}
     },
   };
 
-  // Add the item to the DynamoDB table
   try {
-    console.log('calling ddb.putItem', params);
     const result = await ddb.putItem(params).promise();
-
     console.log('ddb.putItem Success:', result);
   }
   catch (err) {
@@ -84,9 +81,9 @@ exports.handler = async (event, context) => {
   }
   else {
     // A new image was added to the S3 bucket.
-    
-    // Extract data values from image filename.
-    const vehicleSpeedData = extractVehicleSpeedDataFromImageFilename(imageFilename);
+
+    // Get data values
+    const vehicleSpeedData = getVehicleSpeedData(imageFilename, bucket, key);
 
     // Add data to vehicle speed table
     await storeVehicleSpeedData(vehicleSpeedData);
